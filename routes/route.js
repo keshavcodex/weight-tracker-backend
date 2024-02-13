@@ -17,19 +17,23 @@ router.post('/register', async (req, res) => {
 	const response = await register(req.body);
 	res.status(response.statusCode).send(response.data);
 });
-router.post('/addweight', async (req, res) => {
+router.post('/addWeight', async (req, res) => {
 	const response = [];
 	await req.body.map(async (data) => {
 		response.push(await addWeight(data));
 	});
 	res.status(response[req.body.length - 1].statusCode).send(response);
 });
-router.get('/getweight/:id', async (req, res) => {
+router.get('/getWeight/:id', async (req, res) => {
 	const response = await getWeight(req.params.id);
 	res.status(response.statusCode).send(response.data);
 });
-router.get('/getAllweight', async (req, res) => {
-	const response = await getAllWeight();
+router.get('/getAllWeight/:id', async (req, res) => {
+	const response = await getAllWeight(req.params.id);
+	res.status(response.statusCode).send(response.data);
+});
+router.get('/getAllWeight', async (req, res) => {
+	const response = await getAllWeightFromDB();
 	res.status(response.statusCode).send(response.data);
 });
 

@@ -10,12 +10,11 @@ const connection = async (mongourl) => {
 	try {
 		await mongoose.connect(mongourl, {
 			useNewUrlParser: true
-			// Other options as needed
 		});
 		console.log('Database connected successfully.');
 	} catch (error) {
 		console.error('Error connecting to database:', error);
-		throw error; // For proper error handling
+		throw error; 
 	}
 };
 
