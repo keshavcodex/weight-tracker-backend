@@ -9,6 +9,10 @@ import {
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+	res.status(200).send('Gym app server up and running');
+});
+
 router.post('/login', async (req, res) => {
 	const response = await login(req.body);
 	res.status(response.statusCode).send(response.data);
