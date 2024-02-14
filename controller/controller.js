@@ -82,7 +82,10 @@ export const getWeight = async (data) => {
 
 export const getAllWeight = async (userId) => {
 	try {
-		const usersWeight = await weight.find({userId});
+		const usersWeight = await weight.find({ userId }, null, {
+			sort: { lastUpdated: -1 }
+		});
+		console.log(JSON.stringify(usersWeight, null, 2));
 		return { data: usersWeight, statusCode: 200 };
 	} catch (error) {
 		console.log(error);
