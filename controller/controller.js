@@ -1,4 +1,5 @@
 import { userDetails, weight } from '../schema/schema.js';
+import { isSameDate } from '../util/helper.js';
 
 export const register = async (data) => {
 	try {
@@ -33,7 +34,6 @@ export const register = async (data) => {
 		}
 	}
 };
-
 export const login = async (data) => {
 	try {
 		const user = await userDetails.findOne({ email: data.email });
@@ -51,21 +51,35 @@ export const login = async (data) => {
 		return { data: 'User login failed', statusCode: 500 };
 	}
 };
-
 export const addWeight = async (data) => {
 	try {
-		const newWeight = new weight(data);
-		newWeight.save();
-		return { data: newWeight, statusCode: 200 };
+		const userId = data.userId;
+		const userWeight = await weight
+			.findOne({ userId })
+			.sort({ lastUpdated: -1 });
+
+		if (isSameDate(userWeight.lastUpdated)) {
+			const response = await weight.updateOne(
+				{ _id: userWeight._id }, 
+				{ $set: { weight: data.weight } } 
+			);
+			return { data: response, statusCode: 200 };
+		} else {
+			const newWeight = new weight(data);
+			console.log(data)
+			const response = await newWeight.save();
+			return { data: response, statusCode: 200 };
+		}
 	} catch (error) {
 		return { data: 'User weight addition failed', statusCode: 500 };
 	}
 };
-
 export const getWeight = async (data) => {
 	try {
 		const userId = data;
-		const userWeight = await weight.findOne({ userId });
+		const userWeight = await weight
+			.findOne({ userId })
+			.sort({ lastUpdated: -1 });
 		const userInfo = await userDetails.findById(userId);
 		const body = {
 			userWeight,
@@ -79,13 +93,11 @@ export const getWeight = async (data) => {
 		return { data: 'user not found', statusCode: 403 };
 	}
 };
-
 export const getAllWeight = async (userId) => {
 	try {
 		const usersWeight = await weight.find({ userId }, null, {
 			sort: { lastUpdated: -1 }
 		});
-		console.log(JSON.stringify(usersWeight, null, 2));
 		return { data: usersWeight, statusCode: 200 };
 	} catch (error) {
 		console.log(error);
@@ -99,5 +111,15 @@ export const getAllWeightFromDB = async () => {
 	} catch (error) {
 		console.log(error);
 		return { data: 'user not found', statusCode: 403 };
+	}
+};
+export const deleteWeight = async (weightId) => {
+	try {
+		const deleteInfo = await weight.deleteOne({ _id: weightId });
+		console.log('deleteInfo', deleteInfo);
+		return { data: `${weightId} deleted successfully.`, statusCode: 200 };
+	} catch (error) {
+		console.log(error);
+		return { data: `${weightId} deletion failed!`, statusCode: 403 };
 	}
 };
