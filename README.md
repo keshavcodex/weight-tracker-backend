@@ -1,5 +1,5 @@
 # Weight Tracking in the Gym App
-## [BACKEND URL]('https://gym-tracker-wi0v.onrender.com')
+## [BACKEND URL](https://gym-tracker-wi0v.onrender.com)
 The Gym App offers a seamless way to monitor your weight changes over time, supporting your fitness and health goals. Here's a guide to effectively use the weight tracking feature.
 
 ## How to Record Your Weight
