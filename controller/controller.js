@@ -53,20 +53,23 @@ export const login = async (data) => {
 };
 export const addWeight = async (data) => {
 	try {
-		const userId = data.userId;
-		const userWeight = await weight
-			.findOne({ userId })
-			.sort({ lastUpdated: -1 });
+		const { userId, selectedDate } = data;
 
-		if (isSameDate(userWeight.lastUpdated)) {
+		const previousWeight = await weight.findOne({
+			userId: userId,
+			selectedDate: new Date(selectedDate).toISOString()
+		});
+
+		if (previousWeight) {
+			//updating previous weight
 			const response = await weight.updateOne(
-				{ _id: userWeight._id }, 
-				{ $set: { weight: data.weight } } 
+				{ _id: previousWeight._id },
+				{ $set: { weight: data.weight } }
 			);
 			return { data: response, statusCode: 200 };
 		} else {
+			// saving new weight
 			const newWeight = new weight(data);
-			console.log(data)
 			const response = await newWeight.save();
 			return { data: response, statusCode: 200 };
 		}
@@ -96,7 +99,7 @@ export const getWeight = async (data) => {
 export const getAllWeight = async (userId) => {
 	try {
 		const usersWeight = await weight.find({ userId }, null, {
-			sort: { lastUpdated: -1 }
+			sort: { selectedDate: -1 }
 		});
 		return { data: usersWeight, statusCode: 200 };
 	} catch (error) {
@@ -107,6 +110,7 @@ export const getAllWeight = async (userId) => {
 export const getAllWeightFromDB = async () => {
 	try {
 		const usersWeight = await weight.find();
+		console.log(usersWeight);
 		return { data: usersWeight, statusCode: 200 };
 	} catch (error) {
 		console.log(error);

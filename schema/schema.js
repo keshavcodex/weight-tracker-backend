@@ -49,6 +49,10 @@ const userWeight = {
 		type: 'number',
 		required: true
 	},
+	selectedDate: {
+		type: Date,
+		required: true
+	},
 	lastUpdated: {
 		type: String,
 		default: () => new Date().toISOString()

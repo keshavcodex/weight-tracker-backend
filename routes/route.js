@@ -5,6 +5,7 @@ import {
 	addWeight,
 	getWeight,
 	getAllWeight,
+	getAllWeightFromDB,
 	deleteWeight
 } from '../controller/controller.js';
 
