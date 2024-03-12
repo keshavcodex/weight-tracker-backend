@@ -76,7 +76,6 @@ export const deleteWeight = async (weightId) => {
 		return { data: `${weightId} deletion failed!`, statusCode: 403 };
 	}
 };
-
 export const updatedUserId = async (data) => {
 	console.log('data', data);
 	try {
