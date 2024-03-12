@@ -28,9 +28,6 @@ const userSchema = {
 		pattern: '^+[d]{1,2}-d{10}$',
 		required: true
 	},
-	currentWeight: {
-		type: 'number'
-	},
 	lastUpdated: {
 		type: String,
 		default: () => new Date().toISOString()

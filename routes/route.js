@@ -1,13 +1,13 @@
 import express from 'express';
 import {
-	register,
-	login,
 	addWeight,
 	getWeight,
 	getAllWeight,
 	getAllWeightFromDB,
-	deleteWeight
+	deleteWeight,
+	updatedUserId
 } from '../controller/controller.js';
+import { login, register } from '../controller/auth.js';
 
 const router = express.Router();
 
@@ -42,5 +42,9 @@ router.delete('/deleteWeight/:id', async (req, res) => {
 	const response = await deleteWeight(req.params.id);
 	res.status(response.statusCode).send(response.data);
 });
+// router.post('/updateUserId', async (req, res) => {
+// 	const response = await updatedUserId(req.body);
+// 	res.status(response.statusCode).send(response.data);
+// });
 
 export default router;
