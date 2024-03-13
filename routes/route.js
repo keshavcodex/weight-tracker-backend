@@ -10,10 +10,11 @@ import {
 } from '../controller/weightController.js';
 import {
 	addNote,
-	getNote,
-	getAllNote,
 	getAllNoteFromDB,
 	deleteNote,
+	getNoteById,
+	getAllNoteByUserId,
+	getOneNoteByUserId,
 } from '../controller/noteController.js';
 
 const router = express.Router();
@@ -62,11 +63,15 @@ router.post('/addNote', async (req, res) => {
 	res.status(response.statusCode).send(response.data);
 });
 router.get('/getNote/:id', async (req, res) => {
-	const response = await getNote(req.params.id);
+	const response = await getNoteById(req.params.id);
+	res.status(response.statusCode).send(response.data);
+});
+router.get('/getOneNoteByUserId/:id', async (req, res) => {
+	const response = await getOneNoteByUserId(req.params.id);
 	res.status(response.statusCode).send(response.data);
 });
 router.get('/getAllNote/:id', async (req, res) => {
-	const response = await getAllNote(req.params.id);
+	const response = await getAllNoteByUserId(req.params.id);
 	res.status(response.statusCode).send(response.data);
 });
 router.get('/getAllNote', async (req, res) => {

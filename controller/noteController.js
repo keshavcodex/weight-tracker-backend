@@ -8,12 +8,12 @@ export const addNote = async (data) => {
 			userId: userId,
 			selectedDate: new Date(selectedDate).toISOString()
 		});
-
+		
 		if (previousNote) {
 			//updating previous note
 			const response = await note.updateOne(
 				{ _id: previousNote._id },
-				{ $set: { note: data.note } }
+				{ $set: { page: data.page } }
 			);
 			return { data: response, statusCode: 200 };
 		} else {
@@ -26,12 +26,19 @@ export const addNote = async (data) => {
 		return { data: 'User note addition failed', statusCode: 500 };
 	}
 };
-export const getNote = async (data) => {
+export const getNoteById = async (Id) => {
+	try {
+		const noteResponse = await note.findById(Id);
+		return { data: noteResponse, statusCode: 200 };
+	} catch (error) {
+		console.log(error);
+		return { data: 'user not found', statusCode: 403 };
+	}
+};
+export const getOneNoteByUserId = async (data) => {
 	try {
 		const userId = data;
-		const userNote = await note
-			.findOne({ userId })
-			.sort({ lastUpdated: -1 });
+		const userNote = await note.findOne({ userId }).sort({ lastUpdated: -1 });
 		const userInfo = await userDetails.findById(userId);
 		const body = {
 			userNote,
@@ -45,7 +52,7 @@ export const getNote = async (data) => {
 		return { data: 'user not found', statusCode: 403 };
 	}
 };
-export const getAllNote = async (userId) => {
+export const getAllNoteByUserId = async (userId) => {
 	try {
 		const usersNote = await note.find({ userId }, null, {
 			sort: { selectedDate: -1 }
