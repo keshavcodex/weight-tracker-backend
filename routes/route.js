@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, register } from '../controller/auth.js';
+import { login, register, getAllUsers, getUser } from '../services/userServices.js';
 import {
 	addWeight,
 	getWeight,
@@ -7,15 +7,15 @@ import {
 	getAllWeightFromDB,
 	deleteWeight,
 	updatedUserId
-} from '../controller/weightController.js';
+} from '../services/weightServices.js';
 import {
 	addNote,
 	getAllNoteFromDB,
 	deleteNote,
 	getNoteById,
 	getAllNoteByUserId,
-	getOneNoteByUserId,
-} from '../controller/noteController.js';
+	getOneNoteByUserId
+} from '../services/noteServices.js';
 
 const router = express.Router();
 
@@ -28,6 +28,14 @@ router.post('/login', async (req, res) => {
 });
 router.post('/register', async (req, res) => {
 	const response = await register(req.body);
+	res.status(response.statusCode).send(response.data);
+});
+router.get('/getUser/:id', async (req, res) => {
+	const response = await getUser(req.params.id);
+	res.status(response.statusCode).send(response.data);
+});
+router.get('/getAllUsers', async (req, res) => {
+	const response = await getAllUsers();
 	res.status(response.statusCode).send(response.data);
 });
 

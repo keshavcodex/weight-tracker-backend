@@ -34,7 +34,7 @@ const userSchema = {
 	}
 };
 
-export const userDetails = mongoose.model('user', userSchema);
+export const user = mongoose.model('user', userSchema);
 
 const userWeight = {
 	type: 'object',

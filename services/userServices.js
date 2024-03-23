@@ -1,4 +1,4 @@
-import { userDetails } from '../schema/schema.js';
+import { user } from '../schema/schema.js';
 import bcrypt from 'bcrypt';
 
 export const register = async (data) => {
@@ -6,7 +6,7 @@ export const register = async (data) => {
 	try {
 		const hashedPassword = await bcrypt.hash(data.password, saltRounds);
 		data.password = hashedPassword;
-		const newUser = new userDetails(data);
+		const newUser = new user(data);
 		await newUser.save();
 		const { password, ...remaingFields } = newUser._doc;
 		return { data: remaingFields, statusCode: 200 };
@@ -40,7 +40,7 @@ export const register = async (data) => {
 };
 export const login = async (request) => {
 	try {
-		const user = await userDetails.findOne({ email: request.email });
+		const user = await user.findOne({ email: request.email });
 		if (!user) {
 			return { request: 'User not found', statusCode: 401 };
 		}
@@ -52,6 +52,24 @@ export const login = async (request) => {
 		return { data: remaingFields, statusCode: 200 };
 	} catch (error) {
 		return { data: 'User login failed', statusCode: 500 };
+	}
+};
+export const getUser = async (userId) => {
+	try {
+		const userInfo = await user.findOne({ _id: userId });
+		return { data: userInfo, statusCode: 200 };
+	} catch (error) {
+		console.log(error);
+		return { data: 'user not found', statusCode: 403 };
+	}
+};
+export const getAllUsers = async () => {
+	try {
+		const users = await user.find();
+		return { data: users, statusCode: 200 };
+	} catch (error) {
+		console.log(error);
+		return { data: 'user not found', statusCode: 403 };
 	}
 };
 

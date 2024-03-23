@@ -1,4 +1,4 @@
-import { userDetails, note } from '../schema/schema.js';
+import { user, note } from '../schema/schema.js';
 
 export const addNote = async (data) => {
 	try {
@@ -15,11 +15,13 @@ export const addNote = async (data) => {
 				{ _id: previousNote._id },
 				{ $set: { page: data.page } }
 			);
+			console.log('PN response', response)
 			return { data: response, statusCode: 200 };
 		} else {
 			// saving new note
 			const newNote = new note(data);
 			const response = await newNote.save();
+			console.log('NN response', response)
 			return { data: response, statusCode: 200 };
 		}
 	} catch (error) {
@@ -39,7 +41,7 @@ export const getOneNoteByUserId = async (data) => {
 	try {
 		const userId = data;
 		const userNote = await note.findOne({ userId }).sort({ lastUpdated: -1 });
-		const userInfo = await userDetails.findById(userId);
+		const userInfo = await user.findById(userId);
 		const body = {
 			userNote,
 			firstName: userInfo.firstName,
