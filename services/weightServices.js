@@ -1,4 +1,4 @@
-import { userDetails, weight } from '../schema/schema.js';
+import { user, weight } from '../schema/schema.js';
 
 export const addWeight = async (data) => {
 	try {
@@ -32,7 +32,7 @@ export const getWeight = async (data) => {
 		const userWeight = await weight
 			.findOne({ userId })
 			.sort({ lastUpdated: -1 });
-		const userInfo = await userDetails.findById(userId);
+		const userInfo = await user.findById(userId);
 		const body = {
 			userWeight,
 			firstName: userInfo.firstName,
@@ -76,7 +76,6 @@ export const deleteWeight = async (weightId) => {
 		return { data: `${weightId} deletion failed!`, statusCode: 403 };
 	}
 };
-
 export const updatedUserId = async (data) => {
 	console.log('data', data);
 	try {
