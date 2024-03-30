@@ -38,20 +38,24 @@ export const register = async (data) => {
 		}
 	}
 };
+
 export const login = async (request) => {
 	try {
-		const user = await user.findOne({ email: request.email });
-		if (!user) {
+		const userInfo = await user.findOne({ email: request.email });
+		if (!userInfo) {
 			return { request: 'User not found', statusCode: 401 };
 		}
-		const passwordMatches = await validateUser(request.password, user.password);
+		const passwordMatches = await validateUser(
+			request.password,
+			userInfo.password
+		);
 		if (!passwordMatches) {
 			return { data: 'Invalid password', statusCode: 401 };
 		}
-		const { password, ...remaingFields } = user._doc;
+		const { password, ...remaingFields } = userInfo._doc;
 		return { data: remaingFields, statusCode: 200 };
 	} catch (error) {
-		return { data: 'User login failed', statusCode: 500 };
+		return { data: 'Server Error, login failed', statusCode: 500 };
 	}
 };
 export const getUser = async (userId) => {
